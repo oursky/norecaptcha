@@ -1,4 +1,9 @@
-import urllib, json
+import urllib
+
+try:
+    import json
+except ImportError:
+    import simplejson as json
 
 try:
     # test if it's Python 3
@@ -28,7 +33,7 @@ def displayhtml (site_key, language=''):
     language -- The language code for the widget.
     """
 
-    return """<script src="https://www.google.com/recaptcha/api.js?hl=%(LanguageCode)s" async defer></script>
+    return """<script src="https://www.google.com/recaptcha/api.js?hl=%(LanguageCode)s" async="async" defer="defer"></script>
       <div class="g-recaptcha" data-sitekey="%(SiteKey)s"></div>
 """ % {
         'LanguageCode': language,
