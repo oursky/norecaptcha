@@ -12,6 +12,7 @@ VERIFY_SERVER = "www.google.com"
 
 
 class RecaptchaResponse(object):
+
     def __init__(self, is_valid, error_code=None):
         self.is_valid = is_valid
         self.error_code = error_code
@@ -36,7 +37,7 @@ def displayhtml(site_key, language=''):
 """ % {
         'LanguageCode': language,
         'SiteKey': site_key,
-        }
+    }
 
 
 def submit(recaptcha_response_field,
@@ -62,8 +63,8 @@ def submit(recaptcha_response_field,
 
     params = urllib.urlencode({
         'secret': encode_if_necessary(secret_key),
-        'remoteip':  encode_if_necessary(remoteip),
-        'response':  encode_if_necessary(recaptcha_response_field),
+        'remoteip': encode_if_necessary(remoteip),
+        'response': encode_if_necessary(recaptcha_response_field),
     })
 
     request = Request(
@@ -72,8 +73,8 @@ def submit(recaptcha_response_field,
         headers={
             "Content-type": "application/x-www-form-urlencoded",
             "User-agent": "reCAPTCHA Python"
-            }
-        )
+        }
+    )
     httpresp = urlopen(request)
 
     return_values = json.loads(httpresp.read())
