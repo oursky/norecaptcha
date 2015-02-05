@@ -36,8 +36,11 @@ def displayhtml(site_key, language=''):
     language -- The language code for the widget.
     """
 
-    return """<script src="https://www.google.com/recaptcha/api.js?hl=%(LanguageCode)s" async="async" defer="defer"></script>
-      <div class="g-recaptcha" data-sitekey="%(SiteKey)s"></div>
+    return """
+<script
+    src="https://www.google.com/recaptcha/api.js?hl\=%(LanguageCode)s"
+    async="async" defer="defer"></script>
+<div class="g-recaptcha" data-sitekey="%(SiteKey)s"></div>
 """ % {
         'LanguageCode': language,
         'SiteKey': site_key,
@@ -52,13 +55,16 @@ def submit(recaptcha_response_field,
     Submits a reCAPTCHA request for verification. Returns RecaptchaResponse
     for the request
 
-    recaptcha_response_field -- The value of recaptcha_response_field from the form
+    recaptcha_response_field -- The value from the form
     secret_key -- your reCAPTCHA secret key
     remoteip -- the user's ip address
     """
 
     if not(recaptcha_response_field and len(recaptcha_response_field)):
-        return RecaptchaResponse(is_valid=False, error_code='incorrect-captcha-sol')
+        return RecaptchaResponse(
+            is_valid=False,
+            error_code='incorrect-captcha-sol'
+        )
 
     def encode_if_necessary(s):
         if isinstance(s, unicode):
@@ -89,4 +95,7 @@ def submit(recaptcha_response_field,
     if return_code:
         return RecaptchaResponse(is_valid=True)
     else:
-        return RecaptchaResponse(is_valid=False, error_code=return_values['error-codes'])
+        return RecaptchaResponse(
+            is_valid=False,
+            error_code=return_values['error-codes']
+        )
