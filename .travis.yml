@@ -1,0 +1,12 @@
+language: python
+sudo: false
+python:
+  - '2.7'
+  - '3.4'
+install:
+  - pip install pylama
+script:
+  - pylama norecaptcha
+notifications:
+  slack:
+    secure: ZTT/G17ddoGN1o1trffBREmPe6/8VtdsBpcGUH2rV3Rr9l1h8WJDZt1kxiNpMFEMUdDFjbAbbKJiJ1tqgsA5XQ5+rwd/93foQnuJT52Jsg2c6blOAc25IoyatiDz1dsrvj5XKl1bUxwV4rHz3lX16o/7NNK699fiKmo+qruPYFo=
