@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 import urllib
+
 try:
-    import requests
-    use_requests = True
-except ImportError:
     import json
-    use_requests = False
-    try:
-        # test if it's Python 3
-        from urllib.request import Request, urlopen
-    except ImportError:
-        from urllib2 import Request, urlopen
+except ImportError:
+    import simplejson as json
+
+try:
+    # test if it's Python 3
+    from urllib.request import Request, urlopen
+except:
+    from urllib2 import Request, urlopen
 
 VERIFY_SERVER = "www.google.com"
 
@@ -27,7 +27,7 @@ class RecaptchaResponse(object):
         return self.__repr__()
 
 
-def displayhtml(site_key, language, theme, fallback=False, d_type='image'):
+def displayhtml(site_key, language, theme='light', fallback=False, d_type='image'):
     """
     Gets the HTML to display for reCAPTCHA
 
@@ -79,7 +79,10 @@ def submit(recaptcha_response_field, secret_key, remoteip, verify_server=VERIFY_
     """
 
     if not (recaptcha_response_field and len(recaptcha_response_field)):
-        return RecaptchaResponse(is_valid=False, error_code='incorrect-captcha-sol')
+        return RecaptchaResponse(
+            is_valid=False,
+            error_code='incorrect-captcha-sol'
+        )
 
     def encode_if_necessary(s):
         if isinstance(s, unicode):
@@ -92,30 +95,18 @@ def submit(recaptcha_response_field, secret_key, remoteip, verify_server=VERIFY_
          'response': encode_if_necessary(recaptcha_response_field)
          })
 
-    if use_requests:
-        httpresp = requests.get(url="https://%s/recaptcha/api/siteverify" % verify_server,
-                                data=params,
-                                headers={
-                                    "content-type": "application/x-www-form-urlencoded",
-                                    "user-agent": "noReCAPTCHA Python"
-                                },
-                                timeout=30)
+    request = Request(
+        url="https://%s/recaptcha/api/siteverify" % verify_server,
+        data=params,
+        headers={
+            "Content-type": "application/x-www-form-urlencoded",
+            "User-agent": "noReCAPTCHA Python"}
+    )
 
-        return_values = httpresp.json()
-        httpresp.close()
-    else:
-        request = Request(
-            url="https://%s/recaptcha/api/siteverify" % verify_server,
-            data=params,
-            headers={
-                "Content-type": "application/x-www-form-urlencoded",
-                "User-agent": "noReCAPTCHA Python"}
-        )
+    httpresp = urlopen(request)
 
-        httpresp = urlopen(request)
-
-        return_values = json.loads(httpresp.read())
-        httpresp.close()
+    return_values = json.loads(httpresp.read())
+    httpresp.close()
 
     return_code = return_values['success']
     error_codes = return_values.get('error-codes', [])
@@ -123,4 +114,7 @@ def submit(recaptcha_response_field, secret_key, remoteip, verify_server=VERIFY_
     if return_code:
         return RecaptchaResponse(is_valid=True)
     else:
-        return RecaptchaResponse(is_valid=False, error_code=error_codes)
+        return RecaptchaResponse(
+            is_valid=False,
+            error_code=error_codes
+        )
