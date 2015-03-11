@@ -40,9 +40,12 @@ def displayhtml(site_key,
 
     site_key -- The site key
     language -- The language code for the widget.
-    theme -- The color theme of the widget.
+    theme -- The color theme of the widget. `light` or `dark`
     fallback -- Old version recaptcha.
-    d_type -- The type of CAPTCHA to serve.
+    d_type -- The type of CAPTCHA to serve. `image` or `audio`
+
+    For more detail, refer to:
+      - https://developers.google.com/recaptcha/docs/display
     """
 
     return """
