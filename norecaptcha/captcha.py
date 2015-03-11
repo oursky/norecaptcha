@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import urllib
 
 try:
@@ -29,21 +30,57 @@ class RecaptchaResponse(object):
         return self.__repr__()
 
 
-def displayhtml(site_key, language=''):
-    """Gets the HTML to display for reCAPTCHA
+def displayhtml(site_key,
+                language='',
+                theme='light',
+                fallback=False,
+                d_type='image'):
+    """
+    Gets the HTML to display for reCAPTCHA
 
     site_key -- The site key
     language -- The language code for the widget.
+    theme -- The color theme of the widget.
+    fallback -- Old version recaptcha.
+    d_type -- The type of CAPTCHA to serve.
     """
 
     return """
 <script
-    src="https://www.google.com/recaptcha/api.js?hl\=%(LanguageCode)s"
-    async="async" defer="defer"></script>
-<div class="g-recaptcha" data-sitekey="%(SiteKey)s"></div>
+  src="https://www.google.com/recaptcha/api.js?hl\=%(LanguageCode)s"
+  async="async" defer="defer"></script>
+<div class="g-recaptcha"
+  data-sitekey="%(SiteKey)s" data-theme="%(Theme)s" data-type="%(Type)s"></div>
+<noscript>
+  <div style="width: 302px; height: 352px;">
+    <div style="width: 302px; height: 352px; position: relative;">
+      <div style="width: 302px; height: 352px; position: absolute;">
+        <iframe
+          src="https://www.google.com/recaptcha/api/fallback?k=%(SiteKey)s&hl=%(LanguageCode)s"
+          frameborder="0" scrolling="no"
+          style="width: 302px; height:352px; border-style: none;">
+        </iframe>
+      </div>
+      <div
+        style="width: 250px; height: 80px; position: absolute;
+               border-style: none; margin: 0px; padding: 0px;
+               bottom: 21px; left: 25px;  right: 25px;">
+            <textarea
+              id="g-recaptcha-response" name="g-recaptcha-response"
+              class="g-recaptcha-response"
+              style="width: 250px; height: 80px; border: 1px solid #c1c1c1;
+                     margin: 0px; padding: 0px; resize: none;"
+              value=""></textarea>
+      </div>
+    </div>
+  </div>
+</noscript>
 """ % {
         'LanguageCode': language,
         'SiteKey': site_key,
+        'Theme': theme,
+        'Type': d_type,
+        'Fallback': fallback,
     }
 
 
@@ -60,7 +97,7 @@ def submit(recaptcha_response_field,
     remoteip -- the user's ip address
     """
 
-    if not(recaptcha_response_field and len(recaptcha_response_field)):
+    if not (recaptcha_response_field and len(recaptcha_response_field)):
         return RecaptchaResponse(
             is_valid=False,
             error_code='incorrect-captcha-sol'
@@ -82,20 +119,22 @@ def submit(recaptcha_response_field,
         data=params,
         headers={
             "Content-type": "application/x-www-form-urlencoded",
-            "User-agent": "reCAPTCHA Python"
+            "User-agent": "noReCAPTCHA Python"
         }
     )
+
     httpresp = urlopen(request)
 
     return_values = json.loads(httpresp.read())
     httpresp.close()
 
     return_code = return_values['success']
+    error_codes = return_values.get('error-codes', [])
 
     if return_code:
         return RecaptchaResponse(is_valid=True)
     else:
         return RecaptchaResponse(
             is_valid=False,
-            error_code=return_values['error-codes']
+            error_code=error_codes
         )
