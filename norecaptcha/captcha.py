@@ -50,7 +50,7 @@ def displayhtml(site_key,
 
     return """
 <script
-  src="https://www.google.com/recaptcha/api.js?hl\=%(LanguageCode)s"
+  src="https://www.google.com/recaptcha/api.js?hl=%(LanguageCode)s"
   async="async" defer="defer"></script>
 <div class="g-recaptcha"
   data-sitekey="%(SiteKey)s" data-theme="%(Theme)s" data-type="%(Type)s"></div>
