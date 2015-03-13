@@ -6,7 +6,7 @@ README = path.abspath(path.join(path.dirname(__file__), 'README.md'))
 
 setup(
    name='norecaptcha',
-   version='0.2',
+   version='0.2.1',
    packages=['norecaptcha'],
    description='Python client for the google new No CAPTCHA reCAPTCHA services.',
    long_description=open(README).read(),
