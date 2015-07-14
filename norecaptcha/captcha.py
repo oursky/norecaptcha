@@ -50,14 +50,14 @@ def displayhtml(site_key,
 
     return """
 <script
-  src="https://www.google.com/recaptcha/api.js?hl=%(LanguageCode)s"
+  src="https://www.google.com/recaptcha/api.js?hl=%(LanguageCode)s&fallback=%(Fallback)s&"
   async="async" defer="defer"></script>
 <div class="g-recaptcha"
   data-sitekey="%(SiteKey)s" data-theme="%(Theme)s" data-type="%(Type)s"></div>
 <noscript>
-  <div style="width: 302px; height: 422px;">
+  <div  style="width: 302px; height: 480px;">
     <div style="width: 302px; height: 422px; position: relative;">
-      <div style="width: 302px; height: 422px; position: absolute;">
+      <div style="width: 302px; height: 422px; position: relative;">
         <iframe
           src="https://www.google.com/recaptcha/api/fallback?k=%(SiteKey)s&hl=%(LanguageCode)s"
           frameborder="0" scrolling="no"
@@ -65,9 +65,10 @@ def displayhtml(site_key,
         </iframe>
       </div>
       <div
-        style="width: 300px; height: 60px; border-style: none;
-                  bottom: 12px; left: 25px; margin: 0px; padding: 0px; right: 25px;
-                  background: #f9f9f9; border: 1px solid #c1c1c1; border-radius: 3px;">
+        style="border-style: none; bottom: 12px; left: 25px;
+               margin: 0px; padding: 0px; right: 25px;
+               background: #f9f9f9; border: 1px solid #c1c1c1;
+               border-radius: 3px; height: 60px; width: 300px;">
             <textarea
               id="g-recaptcha-response" name="g-recaptcha-response"
               class="g-recaptcha-response"
