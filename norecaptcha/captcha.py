@@ -34,7 +34,8 @@ def displayhtml(site_key,
                 language='',
                 theme='light',
                 fallback=False,
-                d_type='image'):
+                d_type='image',
+                size='normal'):
     """
     Gets the HTML to display for reCAPTCHA
 
@@ -43,6 +44,7 @@ def displayhtml(site_key,
     theme -- The color theme of the widget. `light` or `dark`
     fallback -- Old version recaptcha.
     d_type -- The type of CAPTCHA to serve. `image` or `audio`
+    size -- The size of the dispalyed CAPTCHA, 'normal' or 'compact'
 
     For more detail, refer to:
       - https://developers.google.com/recaptcha/docs/display
@@ -53,7 +55,11 @@ def displayhtml(site_key,
   src="https://www.google.com/recaptcha/api.js?hl=%(LanguageCode)s"
   async="async" defer="defer"></script>
 <div class="g-recaptcha"
-  data-sitekey="%(SiteKey)s" data-theme="%(Theme)s" data-type="%(Type)s"></div>
+    data-sitekey="%(SiteKey)s"
+    data-theme="%(Theme)s"
+    data-type="%(Type)s"
+    data-size="%(Size)s">
+</div>
 <noscript>
   <div style="width: 302px; height: 352px;">
     <div style="width: 302px; height: 352px; position: relative;">
@@ -83,6 +89,7 @@ def displayhtml(site_key,
         'SiteKey': site_key,
         'Theme': theme,
         'Type': d_type,
+        'Size': size,
         'Fallback': fallback,
     }
 
