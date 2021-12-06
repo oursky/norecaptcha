@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import urllib
 
+
 try:
     import json
 except ImportError:
@@ -17,25 +18,20 @@ VERIFY_SERVER = "www.google.com"
 
 
 class RecaptchaResponse(object):
-
     def __init__(self, is_valid, error_code=None):
         self.is_valid = is_valid
         self.error_code = error_code
 
     def __repr__(self):
-        return "Recaptcha response: %s %s" % (
-            self.is_valid, self.error_code)
+        return "Recaptcha response: %s %s" % (self.is_valid, self.error_code)
 
     def __str__(self):
         return self.__repr__()
 
 
-def displayhtml(site_key,
-                language='',
-                theme='light',
-                fallback=False,
-                d_type='image',
-                size='normal'):
+def displayhtml(
+    site_key, language="", theme="light", fallback=False, d_type="image", size="normal"
+):
     """
     Gets the HTML to display for reCAPTCHA
 
@@ -86,19 +82,16 @@ def displayhtml(site_key,
   </div>
 </noscript>
 """ % {
-        'LanguageCode': language,
-        'SiteKey': site_key,
-        'Theme': theme,
-        'Type': d_type,
-        'Size': size,
-        'Fallback': fallback,
+        "LanguageCode": language,
+        "SiteKey": site_key,
+        "Theme": theme,
+        "Type": d_type,
+        "Size": size,
+        "Fallback": fallback,
     }
 
 
-def submit(recaptcha_response_field,
-           secret_key,
-           remoteip,
-           verify_server=VERIFY_SERVER):
+def submit(recaptcha_response_field, secret_key, remoteip, verify_server=VERIFY_SERVER):
     """
     Submits a reCAPTCHA request for verification. Returns RecaptchaResponse
     for the request
@@ -109,29 +102,28 @@ def submit(recaptcha_response_field,
     """
 
     if not (recaptcha_response_field and len(recaptcha_response_field)):
-        return RecaptchaResponse(
-            is_valid=False,
-            error_code='incorrect-captcha-sol'
-        )
+        return RecaptchaResponse(is_valid=False, error_code="incorrect-captcha-sol")
 
     def encode_if_necessary(s):
         if isinstance(s, unicode):
-            return s.encode('utf-8')
+            return s.encode("utf-8")
         return s
 
-    params = urllib.urlencode({
-        'secret': encode_if_necessary(secret_key),
-        'remoteip': encode_if_necessary(remoteip),
-        'response': encode_if_necessary(recaptcha_response_field),
-    })
+    params = urllib.urlencode(
+        {
+            "secret": encode_if_necessary(secret_key),
+            "remoteip": encode_if_necessary(remoteip),
+            "response": encode_if_necessary(recaptcha_response_field),
+        }
+    )
 
     request = Request(
         url="https://%s/recaptcha/api/siteverify" % verify_server,
         data=params,
         headers={
             "Content-type": "application/x-www-form-urlencoded",
-            "User-agent": "noReCAPTCHA Python"
-        }
+            "User-agent": "noReCAPTCHA Python",
+        },
     )
 
     httpresp = urlopen(request)
@@ -139,13 +131,10 @@ def submit(recaptcha_response_field,
     return_values = json.loads(httpresp.read())
     httpresp.close()
 
-    return_code = return_values['success']
-    error_codes = return_values.get('error-codes', [])
+    return_code = return_values["success"]
+    error_codes = return_values.get("error-codes", [])
 
     if return_code:
         return RecaptchaResponse(is_valid=True)
     else:
-        return RecaptchaResponse(
-            is_valid=False,
-            error_code=error_codes
-        )
+        return RecaptchaResponse(is_valid=False, error_code=error_codes)
