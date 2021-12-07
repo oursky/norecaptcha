@@ -1,6 +1,6 @@
 from distutils.core import setup
-
 from os import path
+
 
 README = path.abspath(path.join(path.dirname(__file__), "README.md"))
 
@@ -22,7 +22,10 @@ setup(
         "Operating System :: OS Independent",
         "Topic :: Internet",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 2",
-        "Programming Language :: Python :: 2.7",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3 :: Only",
+        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
     ],
 )
