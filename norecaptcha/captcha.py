@@ -1,17 +1,7 @@
-# -*- coding: utf-8 -*-
-import urllib
-
-
-try:
-    import json
-except ImportError:
-    import simplejson as json
-
-try:
-    # test if it's Python 3
-    from urllib.request import Request, urlopen
-except:
-    from urllib2 import Request, urlopen
+from json import loads
+from urllib.parse import urlencode
+from urllib.request import Request
+from urllib.request import urlopen
 
 
 VERIFY_SERVER = "www.google.com"
@@ -104,18 +94,13 @@ def submit(recaptcha_response_field, secret_key, remoteip, verify_server=VERIFY_
     if not (recaptcha_response_field and len(recaptcha_response_field)):
         return RecaptchaResponse(is_valid=False, error_code="incorrect-captcha-sol")
 
-    def encode_if_necessary(s):
-        if isinstance(s, unicode):
-            return s.encode("utf-8")
-        return s
-
-    params = urllib.urlencode(
+    params = urlencode(
         {
-            "secret": encode_if_necessary(secret_key),
-            "remoteip": encode_if_necessary(remoteip),
-            "response": encode_if_necessary(recaptcha_response_field),
+            "secret": secret_key,
+            "remoteip": remoteip,
+            "response": recaptcha_response_field,
         }
-    )
+    ).encode()
 
     request = Request(
         url="https://%s/recaptcha/api/siteverify" % verify_server,
@@ -128,7 +113,7 @@ def submit(recaptcha_response_field, secret_key, remoteip, verify_server=VERIFY_
 
     httpresp = urlopen(request)
 
-    return_values = json.loads(httpresp.read())
+    return_values = loads(httpresp.read())
     httpresp.close()
 
     return_code = return_values["success"]
